@@ -1,0 +1,19 @@
+{
+  "name": "nodecompras",
+  "version": "1.0.0",
+  "description": "Projeto de estudos usando Node para site de compras",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/cristianomoliveira/nodecompras.git"
+  },
+  "author": "Cristiano Oliveira",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/cristianomoliveira/nodecompras/issues"
+  },
+  "homepage": "https://gitlab.com/cristianomoliveira/nodecompras#readme"
+}
