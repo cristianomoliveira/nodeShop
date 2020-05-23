@@ -1,5 +1,16 @@
 var express = require('express');
 var path = require('path');
+var mongoose = require('mongoose');
+var config = require('./config/database');
+
+//conectando ao db
+mongoose.connect(config.database);
+var db = mongoose.connection;
+db.on('error',console.error.bind(console, 'connection error:'));
+db.once('open', function(){
+    console.log('Conectado ao banco');
+});
+
 
 // iniciando o app
 var app = express();
@@ -19,7 +30,7 @@ app.get('/', function(req, res){
 
 
 //iniciando o servidor
-var porta = 3000;
+var porta = config.porta;
 app.listen(porta, function(){
     console.log('servidor rodando na porta:' + porta);
 });
