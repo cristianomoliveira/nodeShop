@@ -22,13 +22,12 @@ app.set('view engine', 'ejs');
 //Diretório público
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', function(req, res){
-    
-    res.render('index',{
-        title:'Minha Loja'
-    });
+//Setar as rotas
+var pages = require('./routes/pages.js');
+var adminpages = require('./routes/adminpages.js')
 
-});
+app.use('/', pages);
+app.use('/admin/pages', adminpages);
 
 
 //iniciando o servidor
