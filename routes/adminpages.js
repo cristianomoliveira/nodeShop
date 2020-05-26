@@ -1,6 +1,9 @@
 var express = require('express');
 
-router = express.Router();
+var router = express.Router();
+
+//Importando o model de pages
+var Page = require('../models/page');
 
 
 //GET index
@@ -61,6 +64,29 @@ router.post('/add-page', function(req, res){
 
     }else {
 
+        Page.findOne({slug: slug}, function(err, page){
+            if (page){
+                req.flash('danger', 'Essa página existe escolha outra');
+                res.render('admin/add-page', {
+                    title: title,
+                    slug: slug,
+                    content: content
+                });
+            } else{
+                var page = new Page({
+                    title: title,
+                    slug: slug,
+                    content: content,
+                    sorting: 0
+                });
+
+                page.save(function(err){
+                    if (err) return console.log(err);
+                    req.flash('sucess', 'Página salva com sucesso');
+                    res.redirect('/admin/pages');
+                });
+            }
+        });
         console.log('Página cadastrada com sucesso');
     }
 

@@ -11,7 +11,7 @@ var PageSchema = mongoose.Schema({
         type: String
     },
 
-    conten: {
+    content: {
         type: String,
         required: true
     },
