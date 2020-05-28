@@ -104,4 +104,54 @@ router.post('/add-page', function(req, res){
 
 
 
+
+
+
+// Sort pages function
+function sortPages(ids, callback) {
+    var count = 0;
+
+    for (var i = 0; i < ids.length; i++) {
+        var id = ids[i];
+        count++;
+
+        (function (count) {
+            Page.findById(id, function (err, page) {
+                page.sorting = count;
+                page.save(function (err) {
+                    if (err)
+                        return console.log(err);
+                    ++count;
+                    if (count >= ids.length) {
+                        callback();
+                    }
+                });
+            });
+        })(count);
+
+    }
+}
+
+/*
+ * POST reorder pages
+ */
+router.post('/reorder-pages', function (req, res) {
+    var ids = req.body['id[]'];
+
+    sortPages(ids, function () {
+        Page.find({}).sort({sorting: 1}).exec(function (err, pages) {
+            if (err) {
+                console.log(err);
+            } else {
+                req.app.locals.pages = pages;
+            }
+        });
+    });
+
+});
+
+   
+
+
+
 module.exports = router;
