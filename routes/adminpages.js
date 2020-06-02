@@ -153,7 +153,7 @@ router.post('/reorder-pages', function (req, res) {
 
 
 //GET editar páginas
-router.get('/edit-page/:slug', function(req, res){
+router.get('/edit_page/:slug', function(req, res){
     
    Page.findOne({slug: req.params.slug}, function(err, page){
 
@@ -162,7 +162,7 @@ router.get('/edit-page/:slug', function(req, res){
 
 
 
-        res.render('admin/edit-page', {
+        res.render('admin/edit_page', {
             title: page.title,
             slug: page.slug,
             content: page.content,
@@ -175,6 +175,75 @@ router.get('/edit-page/:slug', function(req, res){
 
 
 });
+
+
+
+
+/*
+ * POST edit page
+ */
+router.post('/edit-page/:slug', function (req, res) {
+
+    req.checkBody('title', 'Título deve possuir um valor.').notEmpty();
+    req.checkBody('content', 'Conteúdo deve possuir um valor.').notEmpty();
+
+    var title = req.body.title;
+    var slug = req.body.slug.replace(/\s+/g, '-').toLowerCase();
+    if (slug == "")
+        slug = title.replace(/\s+/g, '-').toLowerCase();
+    var content = req.body.content;
+    var id = req.body.id;
+
+    var errors = req.validationErrors();
+
+    if (errors) {
+        res.render('admin/edit_page', {
+            errors: errors,
+            title: title,
+            slug: slug,
+            content: content,
+            id: id
+        });
+    } else {
+        Page.findOne({slug: slug, _id: {'$ne': id}}, function (err, page) {
+            if (page) {
+                req.flash('danger', 'Esse slug já existe, escolha outro.');
+                res.render('admin/edit_page', {
+                    title: title,
+                    slug: slug,
+                    content: content,
+                    id: id
+                });
+            } else {
+
+                Page.findById(id, function (err, page) {
+                    if (err)
+                        return console.log(err);
+
+                    page.title = title;
+                    page.slug = slug;
+                    page.content = content;
+
+                    page.save(function (err) {
+                        if (err)
+                            return console.log(err);
+
+                        req.flash('success', 'Página editada com sucesso');
+                        res.redirect('/admin/pages/edit_page/'+page.slug);
+
+
+                       
+                    });
+
+                });
+
+
+            }
+        });
+    }
+
+});
+
 
    
 
