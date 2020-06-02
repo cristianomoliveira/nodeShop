@@ -245,6 +245,24 @@ router.post('/edit-page/:slug', function (req, res) {
 });
 
 
+//GET apagar página
+router.get('/delete-page/:id', function(req, res){
+
+   Page.findByIdAndRemove(req.params.id, function(err){
+       if(err)
+        console.log(err);
+
+        req.flash('success', 'Página removida com sucesso');
+        res.redirect('/admin/pages/');
+
+
+   });
+    
+   
+    
+});
+
+
    
 
 
